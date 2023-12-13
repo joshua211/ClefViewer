@@ -1,0 +1,39 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClefViewer.Core", "src\ClefViewer.Core\ClefViewer.Core.csproj", "{0EAD745D-F02F-46AE-A611-8DE49B6962BC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClefViewer.Console", "src\ClefViewer.Console\ClefViewer.Console.csproj", "{91575FAD-6525-4BDE-8880-6254D05BEF41}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClefViewer.DataGenerator", "src\ClefViewer.DataGenerator\ClefViewer.DataGenerator.csproj", "{F91293A2-8879-42E7-B714-7365A4985DA3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{4715D01A-01E9-4DD2-BA16-CD311138FAF2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClefViewer.Core.Tests", "tests\ClefViewer.Core.Tests\ClefViewer.Core.Tests.csproj", "{C87611FF-E30B-4C06-9C76-51B3B4D6FE24}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0EAD745D-F02F-46AE-A611-8DE49B6962BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0EAD745D-F02F-46AE-A611-8DE49B6962BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0EAD745D-F02F-46AE-A611-8DE49B6962BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0EAD745D-F02F-46AE-A611-8DE49B6962BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91575FAD-6525-4BDE-8880-6254D05BEF41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91575FAD-6525-4BDE-8880-6254D05BEF41}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91575FAD-6525-4BDE-8880-6254D05BEF41}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91575FAD-6525-4BDE-8880-6254D05BEF41}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F91293A2-8879-42E7-B714-7365A4985DA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F91293A2-8879-42E7-B714-7365A4985DA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F91293A2-8879-42E7-B714-7365A4985DA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F91293A2-8879-42E7-B714-7365A4985DA3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C87611FF-E30B-4C06-9C76-51B3B4D6FE24}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C87611FF-E30B-4C06-9C76-51B3B4D6FE24}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C87611FF-E30B-4C06-9C76-51B3B4D6FE24}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C87611FF-E30B-4C06-9C76-51B3B4D6FE24}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C87611FF-E30B-4C06-9C76-51B3B4D6FE24} = {4715D01A-01E9-4DD2-BA16-CD311138FAF2}
+	EndGlobalSection
+EndGlobal

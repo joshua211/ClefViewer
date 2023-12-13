@@ -1,0 +1,1 @@
+﻿{"@t":"2023-11-16T10:26:32.5410258Z","@mt":"Simple Log with object {@TestObject}","@l":"Verbose", "TestObject": {"Name": "Test", "Id": 1} ,"SourceContext":"Kran_Checks.Application.Commands.Frage.CreateFrageCommandHandler","ThreadId":16}
