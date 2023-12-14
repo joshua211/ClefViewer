@@ -37,11 +37,6 @@ public class ContextController
 
     public async Task StartAsync()
     {
-        JsonConvert.DefaultSettings = () => new JsonSerializerSettings
-        {
-            Converters = new List<JsonConverter> { new ClefJsonConverter() }
-        }; 
-        
         await LoadPages();
         commandHandler.StartCapture();
         _ = Task.Run(async () =>

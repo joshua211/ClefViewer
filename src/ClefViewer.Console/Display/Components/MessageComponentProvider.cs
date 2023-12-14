@@ -20,14 +20,17 @@ public class MessageComponentProvider : IMessageComponentProvider
                 return new Table();
 
             var asStyled = AsStyledMessage(firstLine);
-            var root = new Tree(asStyled);
+            var root = new Tree(string.Empty);
 
             foreach (var node in firstLine.Unwrap())
             {
                 PopulateTree(root, node);
             }
 
-            var padder = new Padder(root, new Padding(2, 2));
+            var panel = new Panel(asStyled);
+            var rows = new Rows(panel, root);
+            
+            var padder = new Padder(rows, new Padding(2, 2));
 
             // Rows to get some padding
             return padder;
@@ -35,7 +38,7 @@ public class MessageComponentProvider : IMessageComponentProvider
 
         var table = new Table();
 
-        if(properties.ShowTimestamp)
+        if (properties.ShowTimestamp)
             table.AddColumn("Time");
         table.AddColumn("Level");
         table.AddColumn("Message");
@@ -46,16 +49,16 @@ public class MessageComponentProvider : IMessageComponentProvider
 
             asStyled = Styling.AsHighlighted(asStyled, properties.TextFilter);
             var comp = new List<string>();
-            if(properties.ShowTimestamp)
+            if (properties.ShowTimestamp)
                 comp.Add(ev.Timestamp.ToString("T"));
-            comp.Add( Aliases.LogLevelAlias(ev.Level));
+            comp.Add(Aliases.LogLevelAlias(ev.Level));
             comp.Add(asStyled);
             table.AddRow(comp.ToArray());
         }
 
         return table;
     }
-    
+
     private static void PopulateTree(IHasTreeNodes tree, WrappedPrimitive wrapped)
     {
         if (wrapped is WrappedComplex complex)
@@ -71,7 +74,7 @@ public class MessageComponentProvider : IMessageComponentProvider
             tree.AddNode(wrapped.ToString().EscapeMarkup());
         }
     }
-    
+
     private static string AsStyledMessage(Clef ev)
     {
         var renderedMessage = ev.Render().EscapeMarkup();
