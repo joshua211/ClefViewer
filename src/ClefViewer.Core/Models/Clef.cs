@@ -89,7 +89,6 @@ public class Clef : ICanUnwrap
         {
             return new Clef($"Error parsing log event: {e.Message}", LogEventLevel.Error, DateTimeOffset.Now);
         }
-        // TODO handle line that cant be parsed
     }
 
     public bool Matches(CompiledExpression expression)
