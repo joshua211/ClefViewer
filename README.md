@@ -1,4 +1,7 @@
 # ClefViewer
+![GitHub Release Date](https://img.shields.io/github/release-date/joshua211/ClefViewer)
+![GitHub last commit](https://img.shields.io/github/last-commit/joshua211/ClefViewer)
+
 
 ![preview.png](preview.png)
 
