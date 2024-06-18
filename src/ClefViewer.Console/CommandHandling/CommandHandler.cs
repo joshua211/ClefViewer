@@ -4,13 +4,14 @@ namespace ClefViewer.Console.CommandHandling;
 
 public class CommandHandler
 {
-    private Command latestCommand;
-    private bool isStopped = false;
+    private bool isStopped;
 
     public CommandHandler()
     {
-        latestCommand = Command.Start;
+        Latest = Command.Start;
     }
+
+    public Command Latest { get; private set; }
 
     public void StartCapture()
     {
@@ -18,9 +19,9 @@ public class CommandHandler
         {
             while (true)
             {
-                if( isStopped || !AnsiConsole.Console.Input.IsKeyAvailable())
+                if (isStopped || !AnsiConsole.Console.Input.IsKeyAvailable())
                     continue;
-                
+
                 var input = AnsiConsole.Console.Input.ReadKey(true);
 
                 var command = input.Value.Key switch
@@ -28,38 +29,46 @@ public class CommandHandler
                     ConsoleKey.DownArrow => Command.Down,
                     ConsoleKey.UpArrow => Command.Up,
                     ConsoleKey.Escape => Command.ClearAll,
-                    ConsoleKey.F => input.Value.Modifiers == ConsoleModifiers.Control ? Command.Search : input.Value.Modifiers == ConsoleModifiers.Shift ? Command.ClearSearch : Command.None,
-                    ConsoleKey.Q => input.Value.Modifiers == ConsoleModifiers.Control ? Command.Query : input.Value.Modifiers == ConsoleModifiers.Shift ? Command.ClearQuery : Command.None,
-                    ConsoleKey.L => input.Value.Modifiers == ConsoleModifiers.Control ? Command.SelectLevel : Command.None,
-                    ConsoleKey.E => input.Value.Modifiers == ConsoleModifiers.Control ? Command.ToggleExpand : Command.None,
-                    ConsoleKey.B => input.Value.Modifiers == ConsoleModifiers.Control ? Command.ToggleFullScreen : Command.None,
-                    ConsoleKey.T => input.Value.Modifiers == ConsoleModifiers.Control ? Command.ToggleTimestamp : Command.None,
+                    ConsoleKey.F => input.Value.Modifiers == ConsoleModifiers.Control ? Command.Search :
+                        input.Value.Modifiers == ConsoleModifiers.Shift ? Command.ClearSearch : Command.None,
+                    ConsoleKey.Q => input.Value.Modifiers == ConsoleModifiers.Control ? Command.Query :
+                        input.Value.Modifiers == ConsoleModifiers.Shift ? Command.ClearQuery : Command.None,
+                    ConsoleKey.L => input.Value.Modifiers == ConsoleModifiers.Control
+                        ? Command.SelectLevel
+                        : Command.None,
+                    ConsoleKey.E => input.Value.Modifiers == ConsoleModifiers.Control
+                        ? Command.ToggleExpand
+                        : Command.None,
+                    ConsoleKey.B => input.Value.Modifiers == ConsoleModifiers.Control
+                        ? Command.ToggleFullScreen
+                        : Command.None,
+                    ConsoleKey.T => input.Value.Modifiers == ConsoleModifiers.Control
+                        ? Command.ToggleTimestamp
+                        : Command.None,
                     _ => Command.None
                 };
 
-                latestCommand = command;
+                Latest = command;
                 CommandReceived?.Invoke(this, command);
             }
         });
     }
-    
+
     public void StopCapture()
     {
         isStopped = true;
     }
-    
+
     public void ResumeCapture()
     {
-        latestCommand = Command.Start;
+        Latest = Command.Start;
         isStopped = false;
     }
-    
-    public event EventHandler<Command> CommandReceived;
 
-    public Command Latest => latestCommand;
+    public event EventHandler<Command> CommandReceived;
 
     public void ClearLatest()
     {
-        latestCommand = Command.None;
+        Latest = Command.None;
     }
 }

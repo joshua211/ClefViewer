@@ -1,7 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using ClefViewer.Console.CommandHandling;
+﻿using ClefViewer.Console.CommandHandling;
 using ClefViewer.Console.Controller;
-using ClefViewer.Console.Display;
 using ClefViewer.Console.Display.Abstractions;
 using ClefViewer.Console.Settings;
 using ClefViewer.Core.Context;

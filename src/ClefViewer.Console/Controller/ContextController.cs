@@ -1,30 +1,28 @@
 ﻿using ClefViewer.Console.CommandHandling;
 using ClefViewer.Console.Display.Abstractions;
-using ClefViewer.Core;
 using ClefViewer.Core.Context;
 using ClefViewer.Core.Context.Abstractions;
 using ClefViewer.Core.Models;
-using Newtonsoft.Json;
 
 namespace ClefViewer.Console.Controller;
 
 public class ContextController
 {
+    private readonly CommandHandler commandHandler;
     private readonly IClefSourceContext context;
     private readonly IContextDisplay display;
-    private readonly CommandHandler commandHandler;
+    private Page currentPage = null!;
+    private bool expandFirstLine;
+    private bool fullscreen;
+    private List<string> levels;
+    private Page nextPage = null!;
+    private int offset;
 
     private Page previousPage = null!;
-    private Page currentPage = null!;
-    private Page nextPage = null!;
-    private int offset = 0;
-    private bool expandFirstLine = false;
-
-    private string? textFilter = null;
-    private string? queryFilter = null;
-    private List<string> levels;
-    private bool fullscreen = false;
+    private string? queryFilter;
     private bool showTimestamp = true;
+
+    private string? textFilter;
 
     public ContextController(IClefSourceContext context, IContextDisplay display, CommandHandler handler)
     {
@@ -103,24 +101,14 @@ public class ContextController
             case Command.Down:
                 if (offset >= currentPage.Events.Count - 1 &&
                     currentPage.HasNextPage)
-                {
                     LoadNextPage().Wait();
-                }
-                else if (offset < currentPage.Events.Count - 1)
-                {
-                    offset++;
-                }
+                else if (offset < currentPage.Events.Count - 1) offset++;
 
                 break;
             case Command.Up:
                 if (offset > 0)
-                {
                     offset--;
-                }
-                else if (currentPage.PageIndex > 0)
-                {
-                    LoadPreviousPage().Wait();
-                }
+                else if (currentPage.PageIndex > 0) LoadPreviousPage().Wait();
 
                 break;
             case Command.Query:

@@ -1,13 +1,7 @@
-﻿using System.Text.RegularExpressions;
-using ClefViewer.Core.Render;
-using Destructurama;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Serilog;
+﻿using Newtonsoft.Json.Linq;
 using Serilog.Events;
 using Serilog.Expressions;
 using Serilog.Formatting.Compact.Reader;
-using Serilog.Formatting.Display;
 using Serilog.Parsing;
 using Serilog.Templates;
 
@@ -24,33 +18,6 @@ public class Clef : ICanUnwrap
 
     private readonly LogEvent logEvent;
 
-    /// <summary>
-    /// @t Timestamp in ISO8601
-    /// </summary>
-    public DateTimeOffset Timestamp => logEvent.Timestamp;
-
-    /// <summary>
-    /// @m Fully rendered Message
-    /// </summary>
-    public string? Message { get; private set; }
-
-    /// <summary>
-    /// @mt Message template
-    /// </summary>
-    public string? MessageTemplate => logEvent.MessageTemplate.Text;
-
-    /// <summary>
-    /// @l Level of the event, absence of this field indicates level "Informational"
-    /// </summary>
-    public string Level => logEvent.Level.ToString();
-
-    public IReadOnlyDictionary<string, object> Properties { get; private set; }
-
-    /// <summary>
-    /// @x Exception
-    /// </summary>
-    public Exception? Exception => logEvent.Exception;
-
     public Clef(LogEvent ev)
     {
         logEvent = ev;
@@ -61,8 +28,58 @@ public class Clef : ICanUnwrap
     public Clef(string message, LogEventLevel level, DateTimeOffset offset)
     {
         Message = message;
-        logEvent = new LogEvent(offset, level, null, new MessageTemplate(new List<MessageTemplateToken>()), Enumerable.Empty<LogEventProperty>());
+        logEvent = new LogEvent(offset, level, null, new MessageTemplate(new List<MessageTemplateToken>()),
+            Enumerable.Empty<LogEventProperty>());
         Properties = new Dictionary<string, object>();
+    }
+
+    /// <summary>
+    ///     @t Timestamp in ISO8601
+    /// </summary>
+    public DateTimeOffset Timestamp => logEvent.Timestamp;
+
+    /// <summary>
+    ///     @m Fully rendered Message
+    /// </summary>
+    public string? Message { get; private set; }
+
+    /// <summary>
+    ///     @mt Message template
+    /// </summary>
+    public string? MessageTemplate => logEvent.MessageTemplate.Text;
+
+    /// <summary>
+    ///     @l Level of the event, absence of this field indicates level "Informational"
+    /// </summary>
+    public string Level => logEvent.Level.ToString();
+
+    public IReadOnlyDictionary<string, object> Properties { get; }
+
+    /// <summary>
+    ///     @x Exception
+    /// </summary>
+    public Exception? Exception => logEvent.Exception;
+
+    public IReadOnlyCollection<WrappedPrimitive> Unwrap()
+    {
+        var unwrapped = new List<WrappedPrimitive>();
+        unwrapped.Add($"Timestamp: {Timestamp}");
+        unwrapped.Add($"Level:  {Level}");
+        if (Exception is not null)
+            unwrapped.Add($"Exception: {Exception}");
+
+        foreach (var prop in Properties)
+            if (prop.Value is JObject obj)
+            {
+                var wrapped = new WrappedComplex(prop.Key, obj);
+                unwrapped.Add(wrapped);
+            }
+            else
+            {
+                unwrapped.Add($"{prop.Key}: {prop.Value}");
+            }
+
+        return unwrapped;
     }
 
     public string Render()
@@ -102,29 +119,5 @@ public class Clef : ICanUnwrap
     public override string ToString()
     {
         return Render();
-    }
-
-    public IReadOnlyCollection<WrappedPrimitive> Unwrap()
-    {
-        var unwrapped = new List<WrappedPrimitive>();
-        unwrapped.Add($"Timestamp: {Timestamp}");
-        unwrapped.Add($"Level:  {Level}");
-        if (Exception is not null)
-            unwrapped.Add($"Exception: {Exception}");
-
-        foreach (var prop in Properties)
-        {
-            if (prop.Value is JObject obj)
-            {
-                var wrapped = new WrappedComplex(prop.Key, obj);
-                unwrapped.Add(wrapped);
-            }
-            else
-            {
-                unwrapped.Add($"{prop.Key}: {prop.Value}");
-            }
-        }
-
-        return unwrapped;
     }
 }

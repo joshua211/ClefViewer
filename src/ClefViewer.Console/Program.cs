@@ -1,5 +1,4 @@
-﻿
-using ClefViewer.Console;
+﻿using ClefViewer.Console;
 using ClefViewer.Console.CommandHandling;
 using ClefViewer.Console.Controller;
 using ClefViewer.Console.DI;
@@ -7,12 +6,9 @@ using ClefViewer.Console.Display;
 using ClefViewer.Console.Display.Abstractions;
 using ClefViewer.Console.Display.Components;
 using ClefViewer.Console.Display.Components.Abstractions;
-using ClefViewer.Core;
 using ClefViewer.Core.Context;
 using ClefViewer.Core.Context.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
-using Spectre.Console;
 using Spectre.Console.Cli;
 
 var services = new ServiceCollection();

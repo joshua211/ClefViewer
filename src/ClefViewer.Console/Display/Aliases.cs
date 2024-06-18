@@ -20,16 +20,19 @@ public class Aliases
         };
     }
 
-    public static Color LogLevelColor(string key) => key switch
+    public static Color LogLevelColor(string key)
     {
-        "Critical" => Color.Red,
-        "Error" => Color.Red,
-        "Warning" => Color.Yellow,
-        "Information" => Color.Green,
-        "Informational" => Color.Green,
-        "Debug" => Color.Blue,
-        "Trace" => Color.Grey,
-        "Verbose" => Color.Grey,
-        _ => Color.White
-    };
+        return key switch
+        {
+            "Critical" => Color.Red,
+            "Error" => Color.Red,
+            "Warning" => Color.Yellow,
+            "Information" => Color.Green,
+            "Informational" => Color.Green,
+            "Debug" => Color.Blue,
+            "Trace" => Color.Grey,
+            "Verbose" => Color.Grey,
+            _ => Color.White
+        };
+    }
 }

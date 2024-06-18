@@ -4,7 +4,8 @@ using Spectre.Console.Cli;
 namespace ClefViewer.Console.DI;
 
 /// <summary>
-/// SRC: https://github.com/spectreconsole/spectre.console/blob/main/examples/Cli/Injection/Infrastructure/TypeRegistrar.cs
+///     SRC:
+///     https://github.com/spectreconsole/spectre.console/blob/main/examples/Cli/Injection/Infrastructure/TypeRegistrar.cs
 /// </summary>
 public sealed class TypeRegistrar : ITypeRegistrar
 {
@@ -32,11 +33,8 @@ public sealed class TypeRegistrar : ITypeRegistrar
 
     public void RegisterLazy(Type service, Func<object> func)
     {
-        if (func is null)
-        {
-            throw new ArgumentNullException(nameof(func));
-        }
+        if (func is null) throw new ArgumentNullException(nameof(func));
 
-        _builder.AddSingleton(service, (provider) => func());
+        _builder.AddSingleton(service, provider => func());
     }
 }

@@ -7,21 +7,20 @@ namespace ClefViewer.Core.Context;
 public class FileClefSourceContext : IClefSourceContext
 {
     private const int MaxPageSize = 1000;
-
-    private readonly string sourcePath;
     private readonly Dictionary<string, int> encounteredLevels;
+
+    private bool hasLoadedLevels;
     private Page? lastFrame;
-    private bool hasLoadedLevels = false;
 
     public FileClefSourceContext(string sourcePath)
     {
-        this.sourcePath = sourcePath;
+        SourcePath = sourcePath;
         encounteredLevels = new Dictionary<string, int>();
     }
 
     public async Task LoadLevelDataAsync()
     {
-        await using var file = File.Open(sourcePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+        await using var file = File.Open(SourcePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
         using var reader = new StreamReader(file);
         var lines = new List<string>();
         while (!reader.EndOfStream)
@@ -37,13 +36,9 @@ public class FileClefSourceContext : IClefSourceContext
         {
             var @event = Clef.Parse(line);
             if (encounteredLevels.ContainsKey(@event.Level))
-            {
                 encounteredLevels[@event.Level]++;
-            }
             else
-            {
                 encounteredLevels.Add(@event.Level, 1);
-            }
         }
 
         hasLoadedLevels = true;
@@ -51,7 +46,7 @@ public class FileClefSourceContext : IClefSourceContext
 
     public async Task<Page> GetPage(int pageNumber, string? textFilter, string? queryFilter, string[] levels)
     {
-        var reverseReader = new ReverseLineReader(sourcePath);
+        var reverseReader = new ReverseLineReader(SourcePath);
         var events = new List<Clef>();
 
         var offset = pageNumber * lastFrame?.Events.Count ?? pageNumber * MaxPageSize;
@@ -60,47 +55,44 @@ public class FileClefSourceContext : IClefSourceContext
 
         while (enumerator.MoveNext())
         {
+            var line = enumerator.Current;
+            if (currentOffset < offset)
             {
-                var line = enumerator.Current;
-                if (currentOffset < offset)
-                {
-                    currentOffset++;
-                    continue;
-                }
-
-                if (string.IsNullOrEmpty(line))
-                    throw new Exception();
-
-                if (textFilter is not null &&
-                    !line.Contains(textFilter,
-                        StringComparison.OrdinalIgnoreCase)) // only take lines that fulfill the text filter
-                    continue;
-
-                var @event = Clef.Parse(line);
-
-                if (!levels.Contains(@event.Level)) // only take lines that fulfill the level filter
-                    continue;
-
-                CompiledExpression queryExpression = null!;
-                if (queryFilter is not null &&
-                    SerilogExpression.TryCompile(queryFilter, out queryExpression, out var error)) // TODO handle error
-                {
-                    if (!@event.Matches(queryExpression)) // only take lines that fulfill the query filter
-                        continue;
-                }
-
-                events.Add(@event);
-                if (events.Count >= MaxPageSize)
-                    break;
+                currentOffset++;
+                continue;
             }
+
+            if (string.IsNullOrEmpty(line))
+                throw new Exception();
+
+            if (textFilter is not null &&
+                !line.Contains(textFilter,
+                    StringComparison.OrdinalIgnoreCase)) // only take lines that fulfill the text filter
+                continue;
+
+            var @event = Clef.Parse(line);
+
+            if (!levels.Contains(@event.Level)) // only take lines that fulfill the level filter
+                continue;
+
+            CompiledExpression queryExpression = null!;
+            if (queryFilter is not null &&
+                SerilogExpression.TryCompile(queryFilter, out queryExpression, out var error)) // TODO handle error
+                if (!@event.Matches(queryExpression)) // only take lines that fulfill the query filter
+                    continue;
+
+            events.Add(@event);
+            if (events.Count >= MaxPageSize)
+                break;
         }
-         
+
 
         lastFrame = new Page(events, pageNumber, enumerator.MoveNext());
 
         return lastFrame;
     }
 
-    public string SourcePath => sourcePath;
+    public string SourcePath { get; }
+
     public IReadOnlyDictionary<string, int>? EncounteredLevels => hasLoadedLevels ? encounteredLevels : null;
 }

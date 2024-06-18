@@ -2,26 +2,47 @@
 
 public class WrappedPrimitive
 {
-    public object Value { get; private set; }
-
     public WrappedPrimitive(object value)
     {
         Value = value;
     }
-    
-    public static implicit operator WrappedPrimitive(string value) => new(value);
-    
-    public static implicit operator WrappedPrimitive(int value) => new(value);
-    
-    public static implicit operator WrappedPrimitive(float value) => new(value);
-    
-    public static implicit operator WrappedPrimitive(bool value) => new(value);
-    
-    public static implicit operator WrappedPrimitive(DateTime value) => new(value);
-    
-    public static implicit operator WrappedPrimitive(Guid value) => new(value);
-    
-    public static implicit operator WrappedPrimitive(Uri value) => new(value);
+
+    public object Value { get; }
+
+    public static implicit operator WrappedPrimitive(string value)
+    {
+        return new WrappedPrimitive(value);
+    }
+
+    public static implicit operator WrappedPrimitive(int value)
+    {
+        return new WrappedPrimitive(value);
+    }
+
+    public static implicit operator WrappedPrimitive(float value)
+    {
+        return new WrappedPrimitive(value);
+    }
+
+    public static implicit operator WrappedPrimitive(bool value)
+    {
+        return new WrappedPrimitive(value);
+    }
+
+    public static implicit operator WrappedPrimitive(DateTime value)
+    {
+        return new WrappedPrimitive(value);
+    }
+
+    public static implicit operator WrappedPrimitive(Guid value)
+    {
+        return new WrappedPrimitive(value);
+    }
+
+    public static implicit operator WrappedPrimitive(Uri value)
+    {
+        return new WrappedPrimitive(value);
+    }
 
     public override string ToString()
     {

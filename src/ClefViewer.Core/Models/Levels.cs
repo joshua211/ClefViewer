@@ -10,7 +10,7 @@ public static class Levels
         Debug,
         Verbose
     };
-    
+
     public static string Error => "Error";
     public static string Warning => "Warning";
     public static string Information => "Information";

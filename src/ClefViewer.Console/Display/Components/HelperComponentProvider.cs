@@ -17,32 +17,32 @@ public class HelperComponentProvider : IHelperComponentProvider
         grid.AddColumn();
         grid.AddColumn();
 
-        var firstTable = GetShortcutTable(new List<(string, string)>()
+        var firstTable = GetShortcutTable(new List<(string, string)>
         {
             ("[deepskyblue3]<ctrl+f>[/]", "search"),
             ("[deepskyblue3]<ctrl+q>[/]", "query"),
-            ("[deepskyblue3]<ctrl+e>[/]", "expand"),
+            ("[deepskyblue3]<ctrl+e>[/]", "expand")
         });
 
-        var secondTable = GetShortcutTable(new List<(string, string)>()
+        var secondTable = GetShortcutTable(new List<(string, string)>
         {
             ("[deepskyblue3]<shift+f>[/]", "remove filter"),
             ("[deepskyblue3]<shift+q>[/]", "remove query"),
-            ("[deepskyblue3]<escape>[/]", "clear all filter"),
+            ("[deepskyblue3]<escape>[/]", "clear all filter")
         });
 
-        var thirdTable = GetShortcutTable(new List<(string, string)>()
+        var thirdTable = GetShortcutTable(new List<(string, string)>
         {
             ("[deepskyblue3]<ctrl+e>[/]", "expand line"),
             ("[deepskyblue3]<ctrl+b>[/]", "full screen"),
-            ("[deepskyblue3]<ctrl+t>[/]", "toggle timestamp"),
+            ("[deepskyblue3]<ctrl+t>[/]", "toggle timestamp")
         });
 
         grid.AddRow(firstTable, secondTable, thirdTable);
 
         return grid;
     }
-    
+
     private Table GetShortcutTable(IEnumerable<(string, string)> shortcuts)
     {
         var table = new Table();
@@ -52,10 +52,7 @@ public class HelperComponentProvider : IHelperComponentProvider
         table.Border(TableBorder.None);
         table.Expand();
 
-        foreach (var (shortcut, description) in shortcuts)
-        {
-            table.AddRow(shortcut, description);
-        }
+        foreach (var (shortcut, description) in shortcuts) table.AddRow(shortcut, description);
 
         return table;
     }

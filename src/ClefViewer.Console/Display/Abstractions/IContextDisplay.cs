@@ -12,6 +12,6 @@ public interface IContextDisplay
     public string? ShowSearchPrompt();
 
     public List<string> ShowLevelSelector();
-    
+
     public Task WaitForReadyAsync();
 }

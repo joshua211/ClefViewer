@@ -11,14 +11,14 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\ClefViewer.Core\ClefViewer.Core.csproj" />
+        <ProjectReference Include="..\ClefViewer.Core\ClefViewer.Core.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
-      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
-      <PackageReference Include="Spectre.Console" Version="0.47.0" />
-      <PackageReference Include="Spectre.Console.Cli" Version="0.47.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0"/>
+        <PackageReference Include="Spectre.Console" Version="0.47.0"/>
+        <PackageReference Include="Spectre.Console.Cli" Version="0.47.0"/>
     </ItemGroup>
 
 </Project>

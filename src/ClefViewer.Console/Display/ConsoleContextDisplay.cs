@@ -1,11 +1,8 @@
-﻿using System.Text;
-using ClefViewer.Console.Controller;
+﻿using ClefViewer.Console.Controller;
 using ClefViewer.Console.Display.Abstractions;
 using ClefViewer.Console.Display.Components.Abstractions;
-using ClefViewer.Core.Context;
 using ClefViewer.Core.Models;
 using Spectre.Console;
-using Spectre.Console.Rendering;
 
 namespace ClefViewer.Console.Display;
 
@@ -13,14 +10,14 @@ public class ConsoleContextDisplay : IContextDisplay
 {
     private readonly IContextComponentProvider contextComponentProvider;
     private readonly IControlsComponentProvider controlsComponentProvider;
-    private readonly IMessageComponentProvider messageComponentProvider;
     private readonly IHelperComponentProvider helperComponentProvider;
-
-    private bool shouldRender = false;
+    private readonly IMessageComponentProvider messageComponentProvider;
+    private CancellationTokenSource cancellationTokenSource = new();
     private bool isReady = true;
-    private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-    private TaskCompletionSource taskCompletionSource = new TaskCompletionSource();
     private RenderProperties? properties;
+
+    private bool shouldRender;
+    private TaskCompletionSource taskCompletionSource = new();
 
     public ConsoleContextDisplay(IContextComponentProvider contextComponentProvider,
         IControlsComponentProvider controlsComponentProvider, IMessageComponentProvider messageComponentProvider,
@@ -32,16 +29,19 @@ public class ConsoleContextDisplay : IContextDisplay
         this.helperComponentProvider = helperComponentProvider;
     }
 
+    private int AvailableRows =>
+        AnsiConsole.Console.Profile.Height - (properties!.Fullscreen ? 2 : 17); // 17 is control + info space
+
     public async Task StartRenderAsync(RenderProperties props)
     {
-        this.properties = props;
+        properties = props;
         shouldRender = true;
         await RenderContent();
     }
 
     public void Render(RenderProperties props)
     {
-        this.properties = props;
+        properties = props;
         shouldRender = true;
     }
 
@@ -98,10 +98,7 @@ public class ConsoleContextDisplay : IContextDisplay
 
     private void WaitForConsole()
     {
-        while (!isReady)
-        {
-            Thread.Sleep(100);
-        }
+        while (!isReady) Thread.Sleep(100);
     }
 
     private async Task RenderContent()
@@ -130,7 +127,6 @@ public class ConsoleContextDisplay : IContextDisplay
             isReady = false;
             var token = cancellationTokenSource.Token;
             while (!token.IsCancellationRequested)
-            {
                 try
                 {
                     await Task.Delay(50, token);
@@ -158,10 +154,7 @@ public class ConsoleContextDisplay : IContextDisplay
                 catch (TaskCanceledException)
                 {
                 }
-            }
         });
         isReady = true;
     }
-
-    private int AvailableRows => AnsiConsole.Console.Profile.Height - (properties!.Fullscreen ? 2 :17); // 17 is control + info space
 }

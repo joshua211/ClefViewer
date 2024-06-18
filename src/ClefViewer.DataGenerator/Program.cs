@@ -6,7 +6,6 @@ using Serilog;
 using Serilog.Events;
 using Serilog.Formatting.Compact;
 
-
 var logger = new LoggerConfiguration()
     .MinimumLevel.Verbose()
     .WriteTo.File(new CompactJsonFormatter(), "./logs/logs.json")
@@ -44,10 +43,12 @@ var messageFaker = new Faker<Message>()
                 logger.Write(LogEventLevel.Warning, "User {Name} failed to do thing {Thing}", user.Name, thing.Subject);
                 break;
             case MessageType.ThingExploded:
-                logger.Write(LogEventLevel.Error, new Exception($"Something terrible has happened to thing with value {thing.Value}"), "Thing {Thing} exploded!!!", thing.Subject);
+                logger.Write(LogEventLevel.Error,
+                    new Exception($"Something terrible has happened to thing with value {thing.Value}"),
+                    "Thing {Thing} exploded!!!", thing.Subject);
                 break;
         }
     });
-    
+
 var messages = messageFaker.GenerateBetween(100, 200);
 Console.WriteLine($"Generated {messages.Count} messages");

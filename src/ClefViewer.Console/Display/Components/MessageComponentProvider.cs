@@ -22,14 +22,11 @@ public class MessageComponentProvider : IMessageComponentProvider
             var asStyled = AsStyledMessage(firstLine);
             var root = new Tree(string.Empty);
 
-            foreach (var node in firstLine.Unwrap())
-            {
-                PopulateTree(root, node);
-            }
+            foreach (var node in firstLine.Unwrap()) PopulateTree(root, node);
 
             var panel = new Panel(asStyled);
             var rows = new Rows(panel, root);
-            
+
             var padder = new Padder(rows, new Padding(2, 2));
 
             // Rows to get some padding
@@ -64,10 +61,7 @@ public class MessageComponentProvider : IMessageComponentProvider
         if (wrapped is WrappedComplex complex)
         {
             var newNode = tree.AddNode(complex.Key.EscapeMarkup());
-            foreach (var sub in complex.Unwrap())
-            {
-                PopulateTree(newNode, sub);
-            }
+            foreach (var sub in complex.Unwrap()) PopulateTree(newNode, sub);
         }
         else
         {
@@ -84,7 +78,7 @@ public class MessageComponentProvider : IMessageComponentProvider
             "Warning" => Styling.AsWarning(renderedMessage),
             "Information" => Styling.AsInfo(renderedMessage),
             "Debug" => Styling.AsDebug(renderedMessage),
-            "Verbose" => Styling.AsTrace(renderedMessage),
+            "Verbose" => Styling.AsTrace(renderedMessage)
         };
 
         return asStyled;

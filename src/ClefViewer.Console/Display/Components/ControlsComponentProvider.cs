@@ -33,16 +33,18 @@ public class ControlsComponentProvider : IControlsComponentProvider
         var logLevelPanel = new Panel(sb.ToString());
         logLevelPanel.Header("Log Levels");
 
-        var textFilterPanel = new Panel(Styling.AsSearchText(string.IsNullOrEmpty(properties.TextFilter) ? "None" : properties.TextFilter));
+        var textFilterPanel =
+            new Panel(
+                Styling.AsSearchText(string.IsNullOrEmpty(properties.TextFilter) ? "None" : properties.TextFilter));
         textFilterPanel.Header("Text Filter");
 
-        var queryPanel = new Panel(Styling.AsQueryText(string.IsNullOrEmpty(properties.QueryFilter) ? "None" : properties.QueryFilter));
+        var queryPanel =
+            new Panel(Styling.AsQueryText(
+                string.IsNullOrEmpty(properties.QueryFilter) ? "None" : properties.QueryFilter));
         queryPanel.Header("Query");
 
         table.AddRow(logLevelPanel, textFilterPanel, queryPanel);
 
         return table;
     }
-    
-    
 }

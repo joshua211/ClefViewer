@@ -29,9 +29,7 @@ public class ContextComponentProvider : IContextComponentProvider
             var breakdown = new BreakdownChart();
 
             foreach (var encountered in properties.EncounteredLevels)
-            {
                 breakdown.AddItem(encountered.Key, encountered.Value, Aliases.LogLevelColor(encountered.Key));
-            }
 
             breakdownSlot = breakdown;
         }

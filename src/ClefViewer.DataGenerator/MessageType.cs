@@ -6,5 +6,5 @@ public enum MessageType
     UserCreated,
     DidThing,
     ThingFailed,
-    ThingExploded,
+    ThingExploded
 }
