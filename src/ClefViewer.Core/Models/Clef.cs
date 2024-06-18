@@ -16,10 +16,11 @@ namespace ClefViewer.Core.Models;
 public class Clef : ICanUnwrap
 {
     private const string OutputTemplate = "{#if SourceContext is not null}" +
-                                          "(Substring(SourceContext, LastIndexOf(SourceContext, '.') + 1))" +
+                                          "[{Substring(SourceContext, LastIndexOf(SourceContext, '.') + 1)}] " +
                                           "{#end}" +
                                           "{@m:l}";
-    private static readonly ExpressionTemplate expressionTemplate = new (OutputTemplate);
+
+    private static readonly ExpressionTemplate ExpressionTemplate = new(OutputTemplate);
 
     private readonly LogEvent logEvent;
 
@@ -53,7 +54,15 @@ public class Clef : ICanUnwrap
     public Clef(LogEvent ev)
     {
         logEvent = ev;
-        Properties = new Dictionary<string, object>(ev.Properties.Select(p => new KeyValuePair<string, object>(p.Key, p.Value)));
+        Properties =
+            new Dictionary<string, object>(ev.Properties.Select(p => new KeyValuePair<string, object>(p.Key, p.Value)));
+    }
+
+    public Clef(string message, LogEventLevel level, DateTimeOffset offset)
+    {
+        Message = message;
+        logEvent = new LogEvent(offset, level, null, new MessageTemplate(new List<MessageTemplateToken>()), Enumerable.Empty<LogEventProperty>());
+        Properties = new Dictionary<string, object>();
     }
 
     public string Render()
@@ -61,17 +70,26 @@ public class Clef : ICanUnwrap
         if (Message is null)
         {
             var writer = new StringWriter();
-            expressionTemplate.Format(logEvent, writer);
-        
+            ExpressionTemplate.Format(logEvent, writer);
+
             Message = writer.ToString().TrimEnd('\n').TrimEnd('\r');
         }
+
         return Message;
     }
 
     public static Clef Parse(string input)
     {
-        var ev = LogEventReader.ReadFromString(input);
-        return new Clef(ev);
+        try
+        {
+            var ev = LogEventReader.ReadFromString(input);
+            return new Clef(ev);
+        }
+        catch (Exception e)
+        {
+            return new Clef($"Error parsing log event: {e.Message}", LogEventLevel.Error, DateTimeOffset.Now);
+        }
+        // TODO handle line that cant be parsed
     }
 
     public bool Matches(CompiledExpression expression)
@@ -92,9 +110,9 @@ public class Clef : ICanUnwrap
         var unwrapped = new List<WrappedPrimitive>();
         unwrapped.Add($"Timestamp: {Timestamp}");
         unwrapped.Add($"Level:  {Level}");
-        if(Exception is not null)
+        if (Exception is not null)
             unwrapped.Add($"Exception: {Exception}");
-        
+
         foreach (var prop in Properties)
         {
             if (prop.Value is JObject obj)
